@@ -1,38 +1,25 @@
-import tkinter as tk                # python 3
-from tkinter import font  as tkfont # python 3
+import tkinter as tk                
+from tkinter import font  as tkfont 
 from tkinter import filedialog
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
-#import Tkinter as tk     # python 2
-#import tkFont as tkfont  # python 2
+import test
 
-def valinput():
-    inputValue=textBox.get()
 
 def OpenFile():
     name = askopenfilename(initialdir="C:/Users/Batman/Documents/Programming/tkinter/",
                            filetypes =(("Wheel", "*.whl"),("All Files","*.*")),
                            title = "Choose a file."
                            )
-    print (name)
-    #Using try in case user types in unknown file or closes without choosing a file.
-    try:
-        with open(name,'r') as UseFile:
-            print(UseFile.read())
-    except:
-        print("No file exists")
-
+    print(test.whl_install(name))
 
 class SampleApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.title_font = tkfont.Font(family='Helvetica', size=14, weight="bold", slant="italic")
 
-        # the container is where we'll stack a bunch of frames
-        # on top of each other, then the one we want visible
-        # will be raised above the others
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -44,9 +31,6 @@ class SampleApp(tk.Tk):
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
 
-            # put all of the pages in the same location;
-            # the one on the top of the stacking order
-            # will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("StartPage")
@@ -79,23 +63,31 @@ class StartPage(tk.Frame):
 class PageOne(tk.Frame):
 
     def __init__(self, parent, controller):
+        self.package = tk.StringVar()
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        label = tk.Label(self, text="This is page 1", font=controller.title_font)
+        label = tk.Label(self, text="Install via Pip", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
-        textBox=tk.Entry(self)
+        textBox=tk.Entry(self,textvariable=self.package)
         textBox.pack()
 
-        buttoncommit=tk.Button(self,text="Search", command=valinput)
+        buttoncommit=tk.Button(self,text="Search", command=self.valinput)
         buttoncommit.pack()
-       
+
+        self.text = tk.StringVar()
+        self.label2 = tk.Label(self, text="", textvariable=self.text)
+        self.label2.pack(side="top", fill="x", pady=10)
 
 
         button = tk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+    
+    def valinput(self):
+        message=test.install_pip(self.package.get())
+        self.text.set(message)
 
 
 class PageTwo(tk.Frame):
@@ -103,8 +95,13 @@ class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is page 2", font=controller.title_font)
+        label = tk.Label(self, text="Install via Whl File", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
+
+        self.text = tk.StringVar()
+        self.label2 = tk.Label(self, text="", textvariable=self.text)
+        self.label2.pack(side="top", fill="x", pady=10)
+
         button_l = tk.Button(self, text="Browse",
                            command=OpenFile)
         button = tk.Button(self, text="Go to the start page",
@@ -115,17 +112,33 @@ class PageTwo(tk.Frame):
 class PageThree(tk.Frame):
 
     def __init__(self, parent, controller):
+        self.package = tk.StringVar()
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="This is page 3", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10)        
+        label = tk.Label(self, text="Install via Easy_Install", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)   
+        textBox=tk.Entry(self,textvariable=self.package)
+        textBox.pack()
+
+
+        buttoncommit=tk.Button(self,text="Search", command=self.valinput)
+        buttoncommit.pack()
+
+        self.text = tk.StringVar()
+        self.label2 = tk.Label(self, text="", textvariable=self.text)
+        self.label2.pack(side="top", fill="x", pady=10)
+
         button = tk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
-
+    
+    def valinput(self):
+        inputValue=self.package.get()
+        self.text.set(test.install_ei(inputValue))
 
 
 
 if __name__ == "__main__":
     app = SampleApp()
+    app.title("Package Installer")
     app.mainloop()
