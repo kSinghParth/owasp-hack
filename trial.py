@@ -11,7 +11,9 @@ def OpenFile():
                            filetypes =(("Wheel", "*.whl"),("All Files","*.*")),
                            title = "Choose a file."
                            )
-    print(test.whl_install(name))
+    message=test.whl_install(name)
+    self.text.set(message)
+    print(message)
 
 class SampleApp(tk.Tk):
 
@@ -20,7 +22,7 @@ class SampleApp(tk.Tk):
 
         self.title_font = tkfont.Font(family='Helvetica', size=14, weight="bold", slant="italic")
 
-        container = tk.Frame(self)
+        container = ttk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -46,14 +48,14 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="pip installer GUI", font=controller.title_font)
+        label = ttk.Label(self, text="pip installer GUI", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
-        button1 = tk.Button(self, text="Install via pip",
+        button1 = ttk.Button(self, text="Install via pip",
                             command=lambda: controller.show_frame("PageOne"))
-        button2 = tk.Button(self, text="Install from a file",
+        button2 = ttk.Button(self, text="Install from a file",
                             command=lambda: controller.show_frame("PageTwo"))
-        button3 = tk.Button(self, text="Install via easy_install",
+        button3 = ttk.Button(self, text="Install via easy_install",
                             command=lambda: controller.show_frame("PageThree"))
         button1.pack()
         button2.pack()
@@ -64,16 +66,16 @@ class PageOne(tk.Frame):
 
     def __init__(self, parent, controller):
         self.package = tk.StringVar()
-        tk.Frame.__init__(self, parent)
+        ttk.Frame.__init__(self, parent)
         self.controller = controller
 
-        label = tk.Label(self, text="Install via Pip", font=controller.title_font)
+        label = ttk.Label(self, text="Install via Pip", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
-        textBox=tk.Entry(self,textvariable=self.package)
+        textBox=ttk.Entry(self,textvariable=self.package)
         textBox.pack()
 
-        buttoncommit=tk.Button(self,text="Search", command=self.valinput)
+        buttoncommit=ttk.Button(self,text="Search", command=self.valinput)
         buttoncommit.pack()
 
         self.text = tk.StringVar()
@@ -81,12 +83,13 @@ class PageOne(tk.Frame):
         self.label2.pack(side="top", fill="x", pady=10)
 
 
-        button = tk.Button(self, text="Go to the start page",
+        button = ttk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
     
     def valinput(self):
         message=test.install_pip(self.package.get())
+        print(message)
         self.text.set(message)
 
 
@@ -95,16 +98,16 @@ class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Install via Whl File", font=controller.title_font)
+        label = ttk.Label(self, text="Install via Whl File", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
         self.text = tk.StringVar()
-        self.label2 = tk.Label(self, text="", textvariable=self.text)
+        self.label2 = ttk.Label(self, text="", textvariable=self.text)
         self.label2.pack(side="top", fill="x", pady=10)
 
-        button_l = tk.Button(self, text="Browse",
+        button_l = ttk.Button(self, text="Browse",
                            command=OpenFile)
-        button = tk.Button(self, text="Go to the start page",
+        button = ttk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button_l.pack()
         button.pack()
@@ -115,25 +118,26 @@ class PageThree(tk.Frame):
         self.package = tk.StringVar()
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Install via Easy_Install", font=controller.title_font)
+        label = ttk.Label(self, text="Install via Easy_Install", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)   
-        textBox=tk.Entry(self,textvariable=self.package)
+        textBox=ttk.Entry(self,textvariable=self.package)
         textBox.pack()
 
 
-        buttoncommit=tk.Button(self,text="Search", command=self.valinput)
+        buttoncommit=ttk.Button(self,text="Search", command=self.valinput)
         buttoncommit.pack()
 
         self.text = tk.StringVar()
-        self.label2 = tk.Label(self, text="", textvariable=self.text)
+        self.label2 = ttk.Label(self, text="", textvariable=self.text)
         self.label2.pack(side="top", fill="x", pady=10)
 
-        button = tk.Button(self, text="Go to the start page",
+        button = ttk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
     
     def valinput(self):
         inputValue=self.package.get()
+        print(inputValue)
         self.text.set(test.install_ei(inputValue))
 
 
